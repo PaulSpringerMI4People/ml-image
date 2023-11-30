@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const data = new FormData()
   data.append('image', image);
-  const response = await axios.post('http://localhost:55011/score', data, {
+  const response = await axios.post('http://localhost:55002/score', data, {
     headers: {
       'Content-Type': 'application/json',
     }
@@ -33,10 +33,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       },
     });
   }
-  console.log(typeof(JSON.parse(response.data)))
-  const predictions = JSON.parse(response.data);
-  return new NextResponse(predictions, {
-    status: 200,
+  return new NextResponse(response.data, {
     headers: {
       'Content-Type': 'application/json',
     },
