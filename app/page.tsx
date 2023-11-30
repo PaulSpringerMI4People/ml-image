@@ -1,26 +1,38 @@
-'use client'
+"use client"
 import { useState } from 'react'
+import axios from 'axios';
+import { PredTable } from '@/components';
 
 export default function Home() {
 
   const [image, setImage] = useState<File>();
-
+  const [predData, setPredData] = useState();
   const handleChange = (event: any) => {
-    const i = event.target.files[0];
-    setImage(i);
+    const imagePreview = event.target.files[0];
+    setImage(imagePreview);
   };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (image && image.type === "image/png") {
+      const formData = new FormData();
+      formData.append('image', image);
+  
       try {
-        // use `image` as data in request to backend
-        // use axios package
-        alert(`Image uploaded, name is ${image.name}`);
+        const response = await axios.post('/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response.data);
+        console.log(typeof(response.data));
+        setPredData(response.data.data);
       } catch (err) {
-        alert(`Something went wrong!`);
+        alert(err);
       }
-    } else alert("Invalid format or you haven't picked a file");
+    } else {
+      alert("Invalid format or you haven't picked a file");
+    }
   };
 
   return (
@@ -49,7 +61,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
+      {predData && <PredTable data={predData} /> }
     </main>
   )
 }
