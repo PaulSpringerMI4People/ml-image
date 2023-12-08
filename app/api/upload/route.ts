@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const data = new FormData()
   data.append('image', image);
-  const response = await axios.post('http://localhost:55002/score', data, {
+  const response = await axios.post('http://localhost:55011/score', data, {
     headers: {
       'Content-Type': 'application/json',
     }

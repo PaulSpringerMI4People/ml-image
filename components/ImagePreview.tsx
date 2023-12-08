@@ -1,17 +1,30 @@
-import React from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface ImagePreviewProps {
-  image: File | null;
+  image: File | string | null;
 }
 
 const ImagePreview: React.FC<ImagePreviewProps> = ({ image }) => {
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (image instanceof File) {
+      const url = URL.createObjectURL(image);
+      setImageUrl(url);
+
+      return () => URL.revokeObjectURL(url);
+    } else if (typeof image === 'string') {
+      setImageUrl(`data:image/png;base64,${image}`);
+    }
+  }, [image]);
+
   return (
-    <div className="flex items-center justify-center bg-gray-300 rounded-sm sm:w-96 dark:bg-gray-700 mx-auto mt-4">
-      {image ? (
+    <div className="flex items-center justify-center bg-gray-300 rounded-sm sm:w-96 dark:bg-gray-700 mx-auto">
+      {imageUrl ? (
         <Image
           className="object-contain w-full h-full"
-          src={URL.createObjectURL(image)}
+          src={imageUrl}
           alt="Uploaded Image"
           height={256}
           width={256}

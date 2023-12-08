@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Modal } from '@/components'
+import { Modal, ImagePreview } from '@/components'
 import Image from 'next/image';
 
 interface DataTableProps {
   data: { [key: string]: number };
+  camdata: { [key: string]: string };
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, camdata }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
 
   const dataArray = Object.entries(data);
+  const camArray = Object.entries(camdata);
 
   const handleRowClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -28,7 +30,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         </thead>
         <tbody className='rounded-b-sm'>
           {dataArray.map(([condition, value], index) => (
-            <tr key={index} className="bg-white dark:bg-gray-800" onClick={() => handleRowClick('URL_TO_YOUR_IMAGE')}>
+            <tr key={index} className="bg-white dark:bg-gray-800" onClick={() => handleRowClick(camArray[index][1])}>
               <td className="px-6 py-4 text-center">{condition}</td>
               <td className="px-6 py-4 text-center">{value.toFixed(12)}</td>
             </tr>
@@ -37,7 +39,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       </table>
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <Image src="/abc.png" alt="Modal Content" height={512} width={512} />
+        <ImagePreview image={selectedImage} />
       </Modal>
     </div>
   );

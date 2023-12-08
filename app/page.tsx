@@ -9,6 +9,8 @@ import PredTable from '@/components/PredTable';
 export default function Home() {
   const [image, setImage] = useState<File | null>(null);
   const [predData, setPredData] = useState<Record<string, number>>({});
+  const [camData, setCamData] = useState<Record<string, string>>({});
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -28,6 +30,7 @@ export default function Home() {
           },
         });
         setPredData(response.data.preds);
+        setCamData(response.data.gradcam);
       } catch (err) {
         alert(err);
       }
@@ -48,7 +51,7 @@ export default function Home() {
         <ImageUploadForm onImageChange={handleChange} onSubmit={handleSubmit} />
         <ImagePreview image={image} />
       </div>
-      <PredTable data={predData} />
+      <PredTable data={predData} camdata={camData} />
     </main>
   );
 }
